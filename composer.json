@@ -1,0 +1,19 @@
+{
+    "name": "wex/d2p",
+    "description": "Dota 2 Platform",
+    "authors": [
+        {
+            "name": "Niko Hujanen",
+            "email": "niko.hujanen@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "zendframework/zend-config": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wex\\": "src/"
+        }
+    }
+}

@@ -16,11 +16,6 @@ class Blueprint
         $this->table = $table;
     }
 
-    public function pk(string $name)
-    {
-        $this->pk = $name;
-    }
-
     public function &timestamp(string $name)
     {
         $index = count( $this->columns );

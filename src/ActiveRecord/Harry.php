@@ -5,6 +5,10 @@ namespace Wex\ActiveRecord;
 
 use \Wex\App;
 
+/**
+ * Harry the Wizard
+ */
+
 trait Harry {
 
     public static function createSql()

@@ -6,11 +6,15 @@ namespace Wex;
 use \Wex\ActiveRecord\Blueprint;
 use \Wex\ActiveRecord\Select;
 use \Wex\ActiveRecord\Exception\NotFound;
+use \Wex\ActiveRecord\SoftDelete;
+use \Wex\ActiveRecord\Timestamps;
 
 abstract class ActiveRecord
 {
     use ActiveRecord\Describe;
     use ActiveRecord\Harry;
+    use ActiveRecord\Wolfe;
+    use ActiveRecord\Database;
 
     const       table           = null;
 
@@ -38,10 +42,10 @@ abstract class ActiveRecord
         $this->__data[ $key ] = $value;
     }
 
-    public static function load(string $id, bool $strict = true)
+    public static function load($id, bool $strict = true)
     {
         try {
-            return static::select()->where('id = ?', $id)->first();
+            return static::select()->where('id = ?', (string) $id)->first();
         } catch (NotFound $e) {
             if ($strict) throw $e;
             return false;
@@ -51,6 +55,26 @@ abstract class ActiveRecord
     public function save(bool $reload = true)
     {
         $this->__blueprint = $this->__blueprint ?? $this->bluePrint();
+
+        if ($this->validate()) {
+
+            $keys = array_map(function($v) { return $v->name; }, $this->__blueprint->columns);
+            $data = [];
+            foreach ($keys as $key) {
+                $data[$key] = $this->__data[$key] ?? null;
+            }
+            
+            if ($this->id > 0) {
+
+                $this->_update($data, $this->id);                
+
+            } else {
+
+                $this->_insert($data);
+
+            }
+            
+        }
     }
 
     public static function select() : Select
@@ -64,6 +88,15 @@ abstract class ActiveRecord
             throw new NotFound;
         } else {
             return new static($data);
+        }
+    }
+
+    public function destroy()
+    {
+        if ($this instanceof SoftDelete) {
+
+        } else {
+
         }
     }
 }

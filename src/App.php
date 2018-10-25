@@ -56,7 +56,8 @@ class App
     {
         echo '<pre>';
 
-        print_r( \Wex\Page::createSql() );
+        $page = \Wex\Page::load(1);
+        $page->save();
         
 
         return new Response\Html;

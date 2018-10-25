@@ -54,6 +54,11 @@ class App
 
     public function run() : Response
     {
+        echo '<pre>';
+
+        print_r( \Wex\Page::createSql() );
+        
+
         return new Response\Html;
     }
 

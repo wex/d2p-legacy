@@ -10,6 +10,7 @@ use \Wex\ActiveRecord\Exception\NotFound;
 abstract class ActiveRecord
 {
     use ActiveRecord\Describe;
+    use ActiveRecord\Harry;
 
     const       table           = null;
 

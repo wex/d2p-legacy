@@ -7,27 +7,41 @@ use \Wex\ActiveRecord\Blueprint\Column;
 
 class Blueprint
 {
-    protected   $_table;
-    protected   $_columns = [];
+    public  $table;
+    public  $pk         = 'id';
+    public  $columns    = [];
 
     public function __construct(string $table)
     {
-        $this->_table = $table;
+        $this->table = $table;
+    }
+
+    public function pk(string $name)
+    {
+        $this->pk = $name;
     }
 
     public function &timestamp(string $name)
     {
-        $index = count( $this->_columns );
-        $this->_columns[ $index ] = new Column\Timestamp($name);
+        $index = count( $this->columns );
+        $this->columns[ $index ] = new Column\Timestamp($name);
 
-        return $this->_columns[ $index ];
+        return $this->columns[ $index ];
     }
 
     public function &string(string $name)
     {
-        $index = count( $this->_columns );
-        $this->_columns[ $index ] = new Column\Varchar($name);
+        $index = count( $this->columns );
+        $this->columns[ $index ] = new Column\Varchar($name);
 
-        return $this->_columns[ $index ];
+        return $this->columns[ $index ];
+    }
+
+    public function &integer(string $name)
+    {
+        $index = count( $this->columns );
+        $this->columns[ $index ] = new Column\Integer($name);
+
+        return $this->columns[ $index ];
     }
 }

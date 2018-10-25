@@ -5,30 +5,37 @@ namespace Wex\ActiveRecord\Blueprint;
 
 abstract class Column
 {
-    protected   $_name;
-    protected   $_unique    = false;
-    protected   $_required  = true;
-    protected   $_min       = null;
-    protected   $_max       = null;
-    protected   $_default   = null;
+    public  $name;
+    public  $unique     = false;
+    public  $required   = false;
+    public  $min        = null;
+    public  $max        = null;
+    public  $default    = null;
+    public  $enum       = null;
+    public  $index      = null;
 
-    public function &default(mixed $value) : self
+    public function __construct(string $name)
     {
-        $this->_default = $value;
+        $this->name = $name;
+    }
+
+    public function &default($value) : self
+    {
+        $this->default = $value;
 
         return $this;
     }
 
     public function &unique(bool $is = true) : self
     {
-        $this->_unique = $is;
+        $this->unique = $is;
 
         return $this;
     }
 
     public function &required(bool $is = true) : self
     {
-        $this->_required = $is;
+        $this->required = $is;
 
         return $this;
     }
@@ -43,6 +50,20 @@ abstract class Column
     public function &max(int $value) : self
     {
         $this->max = $value;
+
+        return $this;
+    }
+
+    public function &options(array $values) : self
+    {
+        $this->enum = $values;
+
+        return $this;
+    }
+
+    public function &index(string $type = 'index') : self
+    {
+        $this->index = $type;
 
         return $this;
     }

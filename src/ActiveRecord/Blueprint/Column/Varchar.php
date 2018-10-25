@@ -7,11 +7,6 @@ use \Wex\ActiveRecord\Blueprint\Column;
 
 class Varchar extends Column
 {
-    protected   $_min = 0;
-    protected   $_max = 255;
-
-    public function __construct(string $name)
-    {
-        $this->_name = $name;
-    }
+    public  $min    = 0;
+    public  $max    = 255;
 }

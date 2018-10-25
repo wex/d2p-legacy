@@ -12,7 +12,13 @@ class Page extends ActiveRecord implements ActiveRecord\SoftDelete, ActiveRecord
 
     protected function describe(Blueprint &$blueprint) : void
     {
-        $blueprint->string('uri')->unique()->required();
+        $blueprint->string('uri')->unique()->required()->index('unique');
+        $blueprint->string('state')->default('hidden')->options(['published', 'hidden', 'deleted'])->index();;
+        $blueprint->string('type')->options(['template', 'redirect', 'collection']);
+        $blueprint->string('value');
+        $blueprint->string('lang')->max(8)->index();
+        $blueprint->integer('rank')->index()->min(0);
+        
         $blueprint->timestamp('published_at');
     }
 

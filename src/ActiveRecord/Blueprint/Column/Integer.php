@@ -5,7 +5,8 @@ namespace Wex\ActiveRecord\Blueprint\Column;
 
 use \Wex\ActiveRecord\Blueprint\Column;
 
-class Timestamp extends Column
+class Integer extends Column
 {
-
+    public  $min    = PHP_INT_MIN;
+    public  $max    = PHP_INT_MAX;
 }

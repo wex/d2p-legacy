@@ -1,0 +1,7 @@
+app.key                     =
+database.driver             = pdo_mysql
+database.host               = localhost
+database.username           = root
+database.password           = 
+database.dbname             = test
+database.charset            = utf-8

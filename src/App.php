@@ -1,22 +1,27 @@
 <?php
+declare(strict_types=1);
 
 namespace Wex;
 
-use \Zend\Config;
+use \Wex\App\Response;
+use \Zend\Config\Reader\Ini;
+use \Zend\Config\Config;
+use \Zend\Db\Adapter\Adapter;
 
 class App
 {
-    static  $db;
     static  $config;
     static  $uri;
+    static  $db;
 
-    public function __clone() {
+    public function __clone()
+    {
         throw new \RuntimeException('This is a singleton.');
     }
 
-    public static function bootstrap(callable $callback)
+    public static function bootstrap(callable $callback) : Response
     {
-        $callback( new static );
+        return $callback( new static );
     }
 
     private function __construct()
@@ -25,22 +30,28 @@ class App
         $this->route();
     }
 
-    private function configure()
+    private function configure() : void
     {
-        
+        static::$config = new Config([], false);
+        static::$config->merge( static::readConfig(__ROOT__ . '/.config') );
+
+        static::$db     = new Adapter( static::$config->database->toArray() );
     }
 
-    private function route()
+    public static function readConfig(string $filename) : Config
     {
-        static::$uri = $_GET['_uri'] ?? '';
-        echo '<pre>';
-        print_r( $_SERVER );
-        echo '</pre>';
+        $reader = new Ini;
+        return new Config($reader->fromFile($filename));
     }
 
-    public function run()
+    private function route() : void
     {
+        static::$uri = $_GET['_url'] ?? '';
+    }
 
+    public function run() : Response
+    {
+        return new Response\Html;
     }
 
 }

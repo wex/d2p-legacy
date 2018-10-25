@@ -9,7 +9,8 @@
     ],
     "require": {
         "php": "^7.0",
-        "zendframework/zend-config": "^3.2"
+        "zendframework/zend-config": "^3.2",
+        "zendframework/zend-db": "^2.9"
     },
     "autoload": {
         "psr-4": {

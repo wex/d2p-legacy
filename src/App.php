@@ -51,6 +51,15 @@ class App
 
     public function run() : Response
     {
+        echo '<pre>';
+        $page = new \Wex\Page;
+
+        print_r( $page );
+
+        $page->save();
+
+        print_r( $page );
+
         return new Response\Html;
     }
 

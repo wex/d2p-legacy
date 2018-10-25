@@ -8,6 +8,8 @@ class Html implements Response
 {
     public function __toString()
     {
+
+
         return '<b>Happy <u>Man</u></b>';
     }
 }

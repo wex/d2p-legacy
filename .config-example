@@ -4,4 +4,4 @@ database.host               = localhost
 database.username           = root
 database.password           = 
 database.dbname             = test
-database.charset            = utf-8
+database.charset            = utf8

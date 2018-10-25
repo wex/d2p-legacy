@@ -14,4 +14,9 @@ class Page extends ActiveRecord implements ActiveRecord\SoftDelete, ActiveRecord
         $blueprint->string('uri')->unique()->required();
         $blueprint->timestamp('published_at');
     }
+
+    public static function get(string $uri) : self
+    {
+        return static::select()->where('uri = ?', $uri)->first();
+    }
 }

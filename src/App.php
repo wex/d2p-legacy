@@ -7,12 +7,14 @@ use \Wex\App\Response;
 use \Zend\Config\Reader\Ini;
 use \Zend\Config\Config;
 use \Zend\Db\Adapter\Adapter;
+use \Zend\Db\Sql\Sql;
 
 class App
 {
     static  $config;
     static  $uri;
     static  $db;
+    static  $sql;
 
     public function __clone()
     {
@@ -36,6 +38,7 @@ class App
         static::$config->merge( static::readConfig(__ROOT__ . '/.config') );
 
         static::$db     = new Adapter( static::$config->database->toArray() );
+        static::$sql    = new Sql(static::$db);
     }
 
     public static function readConfig(string $filename) : Config
@@ -52,11 +55,11 @@ class App
     public function run() : Response
     {
         echo '<pre>';
-        $page = new \Wex\Page;
 
+        $page = \Wex\Page::get('.');
         print_r( $page );
 
-        $page->save();
+        $page->rev = 2;
 
         print_r( $page );
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Wex;
 
 use Wex\ActiveRecord\Blueprint;
+use Wex\ActiveRecord\Exception\NotFound;
 
 class Page extends ActiveRecord implements ActiveRecord\SoftDelete, ActiveRecord\Timestamps
 {
@@ -15,8 +16,12 @@ class Page extends ActiveRecord implements ActiveRecord\SoftDelete, ActiveRecord
         $blueprint->timestamp('published_at');
     }
 
-    public static function get(string $uri) : self
+    public static function get(string $uri)
     {
-        return static::select()->where('uri = ?', $uri)->first();
+        try {
+            return static::select()->where('uri = ?', $uri)->first();
+        } catch (NotFound $e) {
+            return false;
+        }
     }
 }

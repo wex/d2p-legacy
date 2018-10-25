@@ -63,7 +63,8 @@ class Select extends ZendSelect implements \Iterator
         $statement = App::$db->query( $this->getSql() );
         $results = $statement->execute();
         
-        return $results->current();
+        $value = $results->current();
+        return is_array($value) ? $value : null;
     }
 
     public function all()
@@ -91,7 +92,8 @@ class Select extends ZendSelect implements \Iterator
 
     public function current()
     {
-        return $this->_iterator->current();
+        $value = $this->_iterator->current();
+        return is_array($value) ? $value : null;
     }
 
     public function next()

@@ -54,15 +54,6 @@ class App
 
     public function run() : Response
     {
-        echo '<pre>';
-
-        $page = \Wex\Page::get('.');
-        print_r( $page );
-
-        $page->rev = 2;
-
-        print_r( $page );
-
         return new Response\Html;
     }
 

@@ -5,6 +5,7 @@ namespace Wex;
 
 use \Wex\ActiveRecord\Blueprint;
 use \Wex\ActiveRecord\Select;
+use \Wex\ActiveRecord\Exception\NotFound;
 
 abstract class ActiveRecord
 {
@@ -36,9 +37,14 @@ abstract class ActiveRecord
         $this->__data[ $key ] = $value;
     }
 
-    public static function load(string $id, bool $strict = true) : self
+    public static function load(string $id, bool $strict = true)
     {
-
+        try {
+            return static::select()->where('id = ?', $id)->first();
+        } catch (NotFound $e) {
+            if ($strict) throw $e;
+            return false;
+        }
     }
 
     public function save(bool $reload = true)
@@ -51,8 +57,12 @@ abstract class ActiveRecord
         return new Select(static::class);
     }
 
-    public static function create(array $data) : self
+    public static function create($data) : self
     {
-        return new static($data);
+        if (!is_array($data)) {
+            throw new NotFound;
+        } else {
+            return new static($data);
+        }
     }
 }

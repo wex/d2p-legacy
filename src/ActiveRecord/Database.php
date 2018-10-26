@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Wex\ActiveRecord;
 
+use Zend\Db\Adapter\Adapter;
+use Wex\App;
 use Wex\ActiveRecord\Timestamps;
 
 trait Database 
@@ -13,7 +15,18 @@ trait Database
             $data['created_at'] = static::now();        
         }
 
-        print_r(['insert', $data]);
+        $insert = static::$sql->insert(static::table);
+        $insert->values($data);
+
+        $sql = static::$sql->buildSqlString($insert);
+
+        try {
+            $result = static::$adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 
     protected function _update(array $data, $id)
@@ -21,12 +34,56 @@ trait Database
         if ($this instanceof Timestamps) {
             $data['updated_at'] = static::now();
         }
-        print_r(['update', $data, $id]);
+
+        $update = static::$sql->update(static::table);
+        $update->set($data);
+        $update->where(['id' => $id]);
+
+        $sql = static::$sql->buildSqlString($update);
+
+        try {
+            $result = static::$adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function _delete($id)
+    {
+        $delete = static::$sql->delete(static::table);
+        $delete->where(['id' => $id]);
+
+        $sql = static::$sql->buildSqlString($delete);
+
+        try {
+            $result = static::$adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 
     public static function now(string $format = 'Y-m-d H:i:s')
     {
         return date($format);
+    }
+
+    public function destroy()
+    {
+        if ($this->id > 0) {
+            if ($this instanceof SoftDelete) {
+
+                return $this->_update(['deleted_at' => static::now()], $this->id);
+
+            } else {
+
+                return $this->_delete($this->id);
+
+            }
+        }
     }
 
 }

@@ -58,9 +58,14 @@ class Select extends ZendSelect implements \Iterator
         return App::$db->getPlatform()->quoteIdentifier($value);
     }
 
+    public function query($sql)
+    {
+        return App::$db->query($sql);
+    }
+
     public function first()
     {
-        $statement = App::$db->query( $this->getSql() );
+        $statement = $this->query( $this->getSql() );
         $results = $statement->execute();
         
         $value = $results->current();
@@ -69,7 +74,7 @@ class Select extends ZendSelect implements \Iterator
 
     public function all()
     {
-        $statement = App::$db->query( $this->getSql() );
+        $statement = $this->query( $this->getSql() );
         $results = $statement->execute();
         
         $data = [];
@@ -82,7 +87,7 @@ class Select extends ZendSelect implements \Iterator
 
     public function column()
     {
-        $statement = App::$db->query( $this->getSql() );
+        $statement = $this->query( $this->getSql() );
         $results = $statement->execute();
         
         $data = $results->current();
@@ -113,6 +118,6 @@ class Select extends ZendSelect implements \Iterator
 
     public function rewind()
     {
-        $this->_iterator = App::$db->query( $this->getSql() )->execute();
+        $this->_iterator = $this->query( $this->getSql() )->execute();
     }
 }

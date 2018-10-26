@@ -1,10 +1,9 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "71f76db201fd2beb13222bd1ab0ac517",
     "content-hash": "c82261fc4de70249426c604e2a686f69",
     "packages": [
         {
@@ -54,7 +53,7 @@
                 "container-interop",
                 "psr"
             ],
-            "time": "2017-02-14 16:28:37"
+            "time": "2017-02-14T16:28:37+00:00"
         },
         {
             "name": "zendframework/zend-config",
@@ -114,7 +113,7 @@
                 "config",
                 "zf"
             ],
-            "time": "2018-04-24 19:26:44"
+            "time": "2018-04-24T19:26:44+00:00"
         },
         {
             "name": "zendframework/zend-db",
@@ -172,7 +171,7 @@
                 "db",
                 "zf"
             ],
-            "time": "2018-04-09 13:21:36"
+            "time": "2018-04-09T13:21:36+00:00"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -218,7 +217,7 @@
                 "stdlib",
                 "zf"
             ],
-            "time": "2018-08-28 21:34:05"
+            "time": "2018-08-28T21:34:05+00:00"
         }
     ],
     "packages-dev": [],

@@ -23,6 +23,11 @@ trait Harry {
         foreach ($blueprint->columns as $column) {
 			$sql .= (function($column) {
 				switch (str_replace('Wex\ActiveRecord\Blueprint\Column\\', '', get_class($column))) {
+					case 'Boolean':
+						return sprintf("\t`%s` TINYINT(1) NOT NULL DEFAEULT %d,\n",
+							$column->name,
+							$column->default ? 1 : 0
+						);
 					case 'Varchar':
 						if ($column->enum) {
 							return sprintf("\t`%s` ENUM(%s) %s %s,\n",
@@ -49,6 +54,14 @@ trait Harry {
 					case 'Timestamp':
 						return sprintf("\t`%s` TIMESTAMP %s NULL %s,\n",
 							$column->name,
+							$column->required ? 'NOT' : '',
+							!is_null($column->default) ? sprintf('DEFAULT %s', App::$db->getPlatform()->quoteValue($column->default)) : ($column->required ? '' : 'DEFAULT NULL')
+						);
+					case 'Decimal':
+						return sprintf("\t`%s` DECIMAL(%d,%d) %s NULL %s,\n",
+							$column->name,
+							$column->max,
+							$column->min,
 							$column->required ? 'NOT' : '',
 							!is_null($column->default) ? sprintf('DEFAULT %s', App::$db->getPlatform()->quoteValue($column->default)) : ($column->required ? '' : 'DEFAULT NULL')
 						);

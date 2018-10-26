@@ -8,6 +8,7 @@ use \Zend\Config\Reader\Ini;
 use \Zend\Config\Config;
 use \Zend\Db\Adapter\Adapter;
 use \Zend\Db\Sql\Sql;
+use \Wex\ActiveRecord;
 
 class App
 {
@@ -39,6 +40,9 @@ class App
 
         static::$db     = new Adapter( static::$config->database->toArray() );
         static::$sql    = new Sql(static::$db);
+
+        ActiveRecord::setAdapter(static::$db);
+        ActiveRecord::setSql(static::$sql);
     }
 
     public static function readConfig(string $filename) : Config
@@ -57,8 +61,9 @@ class App
         echo '<pre>';
 
         $page = \Wex\Page::load(1);
-        $page->save();
-        
+        $page->value = microtime(true);
+        print_r( $page );
+        var_dump( $page->save() );
 
         return new Response\Html;
     }

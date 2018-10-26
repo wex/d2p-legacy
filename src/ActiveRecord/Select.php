@@ -35,5 +35,28 @@ class Select extends RawSelect // \Countable
         return $this->_class::create( parent::current() );
     }
 
+    public function getSql()
+    {
+        return $this->_class::$sql->buildSqlString( $this );
+    }
+
+    public function quote($value)
+    {
+        if (is_array($value)) {
+            return $this->_class::$platform->quoteValueList($value);
+        } else {
+            return $this->_class::$platform->quoteValue($value);
+        }
+    }
+
+    public function quoteIdentifier($value)
+    {
+        return $this->_class::$platform->quoteIdentifier($value);
+    }
+
+    public function query($sql)
+    {
+        return $this->_class::$adapter->query($sql);
+    }
 
 }

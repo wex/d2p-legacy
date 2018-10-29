@@ -65,7 +65,7 @@ class App
         print_r( $page );
         var_dump( $page->save() );
 
-        var_dump( $page->html() );
+        echo $page->html() ;
 
         return new Response\Html;
     }

@@ -10,6 +10,7 @@ use \Wex\ActiveRecord\Select;
 use \Wex\ActiveRecord\Exception\NotFound;
 use \Wex\ActiveRecord\SoftDelete;
 use \Wex\ActiveRecord\Timestamps;
+use Wex\ActiveRecord\Blueprint\Column\HasMany;
 
 abstract class ActiveRecord
 {
@@ -63,7 +64,7 @@ abstract class ActiveRecord
         if (isset($this->__blueprint->columns[$name])) {
             switch (str_replace('Wex\ActiveRecord\Blueprint\Column\\', '', get_class($this->__blueprint->columns[$name]))) {
                 case 'HasMany':
-                    $select = $this->__blueprint->columns[$name]->class::select();
+                    $select = $this->__blueprint->columns[$name]->select($this->id);
                     return $select;
                 default:
                     var_dump( get_class($this->__blueprint->columns[$name]) );
@@ -128,7 +129,7 @@ abstract class ActiveRecord
             foreach ( $this->__blueprint->columns as $column) {
                 $defaults[$column->name] = $column->default;
             }
-            $keys       = array_map(function($v) { return $v->name; }, $this->__blueprint->columns);
+            $keys       = array_keys($this->__blueprint->columns);
             $data       = [];
             
             if ($this->id > 0) {

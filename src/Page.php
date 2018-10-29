@@ -19,7 +19,7 @@ class Page extends ActiveRecord implements ActiveRecord\SoftDelete, ActiveRecord
         $blueprint->string('lang')->max(8)->index();
         $blueprint->integer('rank')->index()->min(0);
 
-        $blueprint->hasMany('html', 'Wex\Page\Html');
+        $blueprint->hasMany('html', 'Wex\Page\Html', 'page_id');
         
         $blueprint->timestamp('published_at');
     }

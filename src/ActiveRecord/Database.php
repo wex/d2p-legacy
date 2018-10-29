@@ -23,6 +23,7 @@ trait Database
         try {
             $result = static::$adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         } catch (\Exception $e) {
+            echo $e;
             return false;
         }
 
@@ -44,6 +45,7 @@ trait Database
         try {
             $result = static::$adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         } catch (\Exception $e) {
+            echo $e;
             return false;
         }
 

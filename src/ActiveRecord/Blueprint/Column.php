@@ -67,4 +67,23 @@ abstract class Column
 
         return $this;
     }
+
+    public function getErrors($value) : array
+    {
+        $value  = $this->isEmpty($value) ? $this->default : $value;
+        $errors = [];
+
+        if ($this->required && $this->isEmpty($value))
+            $errors[] = 'required';
+
+        if (is_array($this->enum) && !in_array($value, $this->enum))
+            $errors[] = 'invalid enum';
+
+        return $errors;
+    }
+
+    public function isEmpty($value) : bool
+    {
+        return (is_null($value) || $value === '');
+    }
 }

@@ -7,5 +7,5 @@ use \Wex\ActiveRecord\Blueprint\Column;
 
 class Timestamp extends Column
 {
-
+    
 }

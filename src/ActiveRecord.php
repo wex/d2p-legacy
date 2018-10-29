@@ -134,6 +134,8 @@ abstract class ActiveRecord
             }
             
         }
+
+        return false;
     }
 
     /**

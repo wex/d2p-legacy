@@ -60,8 +60,8 @@ trait Harry {
 					case 'Decimal':
 						return sprintf("\t`%s` DECIMAL(%d,%d) %s NULL %s,\n",
 							$column->name,
-							$column->max,
-							$column->min,
+							12,
+							4,
 							$column->required ? 'NOT' : '',
 							!is_null($column->default) ? sprintf('DEFAULT %s', App::$db->getPlatform()->quoteValue($column->default)) : ($column->required ? '' : 'DEFAULT NULL')
 						);

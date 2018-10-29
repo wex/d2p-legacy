@@ -56,6 +56,21 @@ abstract class ActiveRecord
         $this->__data = $values;
     }
 
+    public function __call($name, $arguments)
+    {
+        $this->__blueprint = $this->__blueprint ?? $this->bluePrint();
+
+        if (isset($this->__blueprint->columns[$name])) {
+            switch (str_replace('Wex\ActiveRecord\Blueprint\Column\\', '', get_class($this->__blueprint->columns[$name]))) {
+                case 'HasMany':
+                    $select = $this->__blueprint->columns[$name]->class::select();
+                    return $select;
+                default:
+                    var_dump( get_class($this->__blueprint->columns[$name]) );
+            }
+        }
+    }
+
     /**
      * Magical getter for properties
      */

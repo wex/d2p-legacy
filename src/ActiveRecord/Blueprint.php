@@ -16,43 +16,46 @@ class Blueprint
         $this->table = $table;
     }
 
+    public function hasMany(string $name, string $class) : Column
+    {
+        $this->columns[ $name ] = new Column\HasMany($name);
+        $this->columns[ $name ]->setClass($class);
+
+        return $this->columns[ $name ];        
+    }
+
     public function &timestamp(string $name) : Column
     {
-        $index = count( $this->columns );
-        $this->columns[ $index ] = new Column\Timestamp($name);
+        $this->columns[ $name ] = new Column\Timestamp($name);
 
-        return $this->columns[ $index ];
+        return $this->columns[ $name ];
     }
 
     public function &string(string $name) : Column
     {
-        $index = count( $this->columns );
-        $this->columns[ $index ] = new Column\Varchar($name);
+        $this->columns[ $name ] = new Column\Varchar($name);
 
-        return $this->columns[ $index ];
+        return $this->columns[ $name ];
     }
 
     public function &decimal(string $name) : Column
     {
-        $index = count( $this->columns );
-        $this->columns[ $index ] = new Column\Decimal($name);
+        $this->columns[ $name ] = new Column\Decimal($name);
 
-        return $this->columns[ $index ];
+        return $this->columns[ $name ];
     }
 
     public function &boolean(string $name) : Column
     {
-        $index = count( $this->columns );
-        $this->columns[ $index ] = new Column\Boolean($name);
+        $this->columns[ $name ] = new Column\Boolean($name);
 
-        return $this->columns[ $index ];
+        return $this->columns[ $name ];
     }
 
     public function &integer(string $name) : Column
     {
-        $index = count( $this->columns );
-        $this->columns[ $index ] = new Column\Integer($name);
+        $this->columns[ $name ] = new Column\Integer($name);
 
-        return $this->columns[ $index ];
+        return $this->columns[ $name ];
     }
 }

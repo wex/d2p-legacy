@@ -113,6 +113,7 @@ class Select extends ZendSelect implements \Iterator
 
     public function valid()
     {
+        $this->_iterator->current();
         return $this->_iterator->valid();
     }
 

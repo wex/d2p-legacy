@@ -11,6 +11,7 @@ use \Wex\ActiveRecord\Exception\NotFound;
 use \Wex\ActiveRecord\SoftDelete;
 use \Wex\ActiveRecord\Timestamps;
 use Wex\ActiveRecord\Blueprint\Column\HasMany;
+use Wex\ActiveRecord\Collection;
 
 abstract class ActiveRecord
 {
@@ -23,6 +24,7 @@ abstract class ActiveRecord
 
     protected   $__dirty        = [];
     protected   $__data         = [];
+    protected   $__relations    = [];
     protected   $__blueprint    = null;
 
     static      $adapter        = null;
@@ -49,27 +51,18 @@ abstract class ActiveRecord
      */
     abstract protected function describe(Blueprint &$table) : void;
 
+    protected function relatedTo() : void
+    {
+
+    }
+
     /**
      * Build ActiveRecord from raw data
      */
     public function __construct(array $values = [])
     {
         $this->__data = $values;
-    }
-
-    public function __call($name, $arguments)
-    {
-        $this->__blueprint = $this->__blueprint ?? $this->bluePrint();
-
-        if (isset($this->__blueprint->columns[$name])) {
-            switch (str_replace('Wex\ActiveRecord\Blueprint\Column\\', '', get_class($this->__blueprint->columns[$name]))) {
-                case 'HasMany':
-                    $select = $this->__blueprint->columns[$name]->select($this->id);
-                    return $select;
-                default:
-                    var_dump( get_class($this->__blueprint->columns[$name]) );
-            }
-        }
+        $this->relatedTo();
     }
 
     /**
@@ -77,6 +70,10 @@ abstract class ActiveRecord
      */
     public function __get(string $key)
     {
+        if (array_key_exists($key, $this->__relations)) {
+            return $this->__relations[$key];
+        }
+
         return $this->__data[ $key ] ?? null;
     }
 
@@ -178,6 +175,14 @@ abstract class ActiveRecord
         } else {
             return new static($data);
         }
+    }
+
+    protected function &hasMany(string $name, string $fieldName = null, string $foreignKey = null) : Collection
+    {
+        $key = $fieldName ?: $name::table;
+        $this->__relations[ $key ] = new Collection($this, $name, $key, $foreignKey);
+
+        return $this->__relations[ $key ];
     }
 
 }

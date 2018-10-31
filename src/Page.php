@@ -18,10 +18,13 @@ class Page extends ActiveRecord implements ActiveRecord\SoftDelete, ActiveRecord
         $blueprint->string('value');
         $blueprint->string('lang')->max(8)->index();
         $blueprint->integer('rank')->index()->min(0);
-
-        $blueprint->hasMany('html', 'Wex\Page\Html', 'page_id');
-        
         $blueprint->timestamp('published_at');
+    }
+
+    protected function relatedTo() : void
+    {
+        $this->hasMany(\Wex\Page\Html::class, 'fields', 'page_id');
+        $this->hasMany(\Wex\Page\Html::class, 'users', 'page_id')->thru('pages2users', 'user_id');
     }
 
     public static function get(string $uri)

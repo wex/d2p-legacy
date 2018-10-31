@@ -16,14 +16,6 @@ class Blueprint
         $this->table = $table;
     }
 
-    public function hasMany(string $name, string $class) : Column
-    {
-        $this->columns[ $name ] = new Column\HasMany($name);
-        $this->columns[ $name ]->setClass($class);
-
-        return $this->columns[ $name ];        
-    }
-
     public function &timestamp(string $name) : Column
     {
         $this->columns[ $name ] = new Column\Timestamp($name);

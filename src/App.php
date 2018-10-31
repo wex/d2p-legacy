@@ -61,11 +61,14 @@ class App
         echo '<pre>';
 
         $page = \Wex\Page::load(1);
-        $page->value = microtime(true);
-        print_r( $page );
-        var_dump( $page->save() );
 
-        echo $page->html() ;
+        var_dump( $page );
+
+        var_dump( $page->fields );
+
+        foreach ($page->fields as $field) {
+            var_dump( $field );
+        }
 
         return new Response\Html;
     }

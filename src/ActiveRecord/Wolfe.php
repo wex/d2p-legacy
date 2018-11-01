@@ -13,15 +13,15 @@ use \Wex\App;
 trait Wolfe {
     public function validate()
     {
-        $errors = [];
+        $this->errors = [];
         $this->__blueprint = $this->__blueprint ?? $this->bluePrint();
 
         foreach ($this->__blueprint->columns as $column) {
-            $errors[$column->name] = $column->getErrors( $this->{$column->name} );
+            $this->errors[$column->name] = $column->getErrors( $this->{$column->name} );
         }
 
-        $errors = array_filter($errors, function($v) { return !!count($v); });
+        $this->errors = array_filter($this->errors, function($v) { return !!count($v); });
         
-        return !count($errors);
+        return !count($this->errors);
     }
 }

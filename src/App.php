@@ -60,9 +60,16 @@ class App
     {
         echo '<pre>';
 
-        $page = \Wex\Page::load(1);
+        $page = \Wex\Page::create([
+            'uri'   => 'test' . microtime(true),
+            'type'  => 'template',
+            'value' => 'foo',
+        ]);
 
         var_dump( $page );
+        var_dump( $page->save() );
+        var_dump( $page );
+        exit;
 
         var_dump( $page->fields );
 

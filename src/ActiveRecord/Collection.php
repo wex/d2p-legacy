@@ -19,6 +19,8 @@ class Collection implements \Iterator
     protected   $_joinKey   = false;
     protected   $_joinPivot = [];
 
+    protected   $__cache = [];
+
     public function __construct(ActiveRecord &$parent, string $object, string $name, string $key = null)
     {
         $this->_parent  = $parent;
@@ -69,8 +71,6 @@ class Collection implements \Iterator
         } else {
             $this->_select->where(["{$this->_table}.{$this->_key}" => $this->_parent->id]);
         }
-
-        echo $this->_select;
 
         $this->_select->rewind();
     }

@@ -27,6 +27,8 @@ abstract class ActiveRecord
     protected   $__relations    = [];
     protected   $__blueprint    = null;
 
+    public      $errors         = [];
+
     static      $adapter        = null;
     static      $sql            = null;
     static      $platform       = null;
@@ -135,14 +137,23 @@ abstract class ActiveRecord
                     if (!isset($this->__dirty[$key])) continue;
                     $data[$key] = $this->__data[$key] ?? null;
                 }
-                return count($data) ? $this->_update($data, $this->id) : true;
+                if (count($data)) $this->_update($data, $this->id);
+
+                $this->refresh();
+                
+                return true;
 
             } else {
 
                 foreach ($keys as $key) {
                     $data[$key] = $this->__data[$key] ?? $defaults[$key];
                 }
-                return count($data) ? $this->_insert($data) : true;
+
+                if (count($data)) $this->_insert($data);
+
+                $this->refresh();
+
+                return true;
 
             }
             

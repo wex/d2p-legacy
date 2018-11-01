@@ -6,6 +6,7 @@ namespace Wex\ActiveRecord;
 use Zend\Db\Adapter\Adapter;
 use Wex\App;
 use Wex\ActiveRecord\Timestamps;
+use Wex\ActiveRecord\Exception\Failed;
 
 trait Database 
 {
@@ -22,9 +23,9 @@ trait Database
 
         try {
             $result = static::$adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+            $this->id = $result->getGeneratedValue();
         } catch (\Exception $e) {
-            echo $e;
-            return false;
+            throw new Failed($e->getMessage());
         }
 
         return true;
@@ -45,8 +46,7 @@ trait Database
         try {
             $result = static::$adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
         } catch (\Exception $e) {
-            echo $e;
-            return false;
+            throw new Failed($e->getMessage());
         }
 
         return true;
@@ -66,6 +66,11 @@ trait Database
         }
 
         return true;
+    }
+
+    public function refresh()
+    {
+        $this->__data = static::select()->where(['id' => $this->id])->first();
     }
 
     public static function now(string $format = 'Y-m-d H:i:s')

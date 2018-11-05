@@ -29,10 +29,11 @@ class App
 
     private function __construct()
     {
+        $this->debug();
+
         $this->configure();
         $this->route();
-        Session::initialize();
-        $this->debug();
+        Session::initialize( static::$config->app->key );
     }
 
     private function debug() : void
@@ -67,6 +68,8 @@ class App
 
     public function run() : Response
     {
+        echo '<pre>';
+        print_r( static::$config );
         return new Response\Html;
     }
 

@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace Wex\ActiveRecord;
 
 use Wex\ActiveRecord;
+use Wex\ActiveRecord\Exception\NotFound;
 
 
-class Collection implements \Iterator
+class Collection implements \Iterator, \ArrayAccess
 {
     protected   $_select;
 
@@ -19,7 +20,9 @@ class Collection implements \Iterator
     protected   $_joinKey   = false;
     protected   $_joinPivot = [];
 
-    protected   $__cache = [];
+    protected   $__iterator = null;
+    protected   $__cache    = null;
+    protected   $__data;
 
     public function __construct(ActiveRecord &$parent, string $object, string $name, string $key = null)
     {
@@ -48,22 +51,23 @@ class Collection implements \Iterator
 
     public function current()
     {
-        return $this->_select->current();
+        return $this->__cache[ $this->__iterator ];
     }
 
     public function key()
     {
-        return $this->_select->key();
+        return $this->__iterator;
     }
 
     public function next()
     {
-        return $this->_select->next();
+        $this->__iterator++;
     }
 
     public function rewind()
     {
-        $this->_select = $this->_class::select();
+        $this->__iterator   = 0;
+        $this->_select      = $this->_class::select();
 
         if ($this->_joinTable) {
             $this->_select->join(['join_table' => $this->_joinTable], "join_table.{$this->_joinKey} = {$this->_table}.id", []);
@@ -72,17 +76,61 @@ class Collection implements \Iterator
             $this->_select->where(["{$this->_table}.{$this->_key}" => $this->_parent->id]);
         }
 
-        $this->_select->rewind();
+        $this->_select->limit(1);
+        $this->_select->reset('offset');
     }
 
     public function valid()
     {
-        return $this->_select->valid();
+        $this->_select->offset( $this->__iterator );
+
+        try {
+            $object = $this->_select->first();
+        } catch (NotFound $e) {
+            return false;
+        }
+
+        $this->__cache[ $this->__iterator ] = $object;
+
+        return true;
     }
 
     public function save()
     {
         throw new \ErrorException("TODO: Implement");
+    }
+
+    public function offsetExists($offset)
+    {
+        $this->__iterator = $offset;
+
+        return $this->valid();
+    }
+
+    public function offsetGet($offset)
+    {
+        $this->__iterator = $offset;
+
+        if (!$this->valid()) {
+            throw new NotFound("Entry not found: {$offset}");
+        }
+
+        return $this->current();
+    }
+
+    public function offsetUnset($offset)
+    {
+        throw new \ErrorException("TODO: Implement delete from collection [{$offset}]");
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        if (is_null($offset)) {
+            // Add new
+        } else {
+            // Update existing (maybe)
+        }
+        throw new \ErrorException("TODO: Implement set into collection [{$offset} = object]");
     }
 
     /**

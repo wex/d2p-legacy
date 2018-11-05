@@ -60,21 +60,10 @@ class App
     {
         echo '<pre>';
 
-        $page = \Wex\Page::create([
-            'uri'   => 'test' . microtime(true),
-            'type'  => 'template',
-            'value' => 'foo',
-        ]);
+        $page = \Wex\Page::load(1);
 
-        var_dump( $page );
-        var_dump( $page->save() );
-        var_dump( $page );
-        exit;
-
-        var_dump( $page->fields );
-
-        foreach ($page->fields as $field) {
-            var_dump( $field );
+        foreach ($page->fields as $key => $field) {
+            var_dump( [$key, $field] );
         }
 
         return new Response\Html;

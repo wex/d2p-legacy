@@ -18,24 +18,12 @@ if (PHP_SAPI == 'cli-server') {
 define('__ROOT__', realpath(__DIR__ . '/../'));
 require __ROOT__ . '/vendor/autoload.php';
 
-session_start();
 
-try {
+$request = App::bootstrap(function($app) {
+    return $app->run();
+});
 
-    $request = App::bootstrap(function($app) {
-        return $app->run();
-    });
-
-    /**
-     * @todo Fix this - Lazy Man's PSR-over9000
-     */
-    echo $request;
-
-} catch (\Exception $e) {
-
-    /**
-     * @todo Add error handling!
-     */
-    echo "<pre>{$e}</pre>";
-    
-}
+/**
+ * @todo Fix this - Lazy Man's PSR-over9000
+ */
+echo $request;

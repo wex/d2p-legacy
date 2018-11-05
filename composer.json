@@ -10,7 +10,9 @@
     "require": {
         "php": "^7.0",
         "zendframework/zend-config": "^3.2",
-        "zendframework/zend-db": "^2.9"
+        "zendframework/zend-db": "^2.9",
+        "ramsey/uuid": "^3.8",
+        "filp/whoops": "^2.3"
     },
     "autoload": {
         "psr-4": {

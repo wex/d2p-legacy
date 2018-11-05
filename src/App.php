@@ -31,6 +31,15 @@ class App
     {
         $this->configure();
         $this->route();
+        Session::initialize();
+        $this->debug();
+    }
+
+    private function debug() : void
+    {
+        $whoops = new \Whoops\Run;
+        $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+        $whoops->register();
     }
 
     private function configure() : void
@@ -58,14 +67,6 @@ class App
 
     public function run() : Response
     {
-        echo '<pre>';
-
-        $page = \Wex\Page::load(1);
-
-        foreach ($page->fields as $key => $field) {
-            var_dump( [$key, $field] );
-        }
-
         return new Response\Html;
     }
 

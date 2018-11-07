@@ -1,6 +1,8 @@
 <?php
 
 use Wex\App;
+use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Response;
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -19,11 +21,8 @@ define('__ROOT__', realpath(__DIR__ . '/../'));
 require __ROOT__ . '/vendor/autoload.php';
 
 
-$request = App::bootstrap(function($app) {
-    return $app->run();
-});
+$app = App::bootstrap();
 
-/**
- * @todo Fix this - Lazy Man's PSR-over9000
- */
-echo $request;
+$app->run(function(App $app, ServerRequest $request, Response $response) {
+    $app->serve( $response );
+});

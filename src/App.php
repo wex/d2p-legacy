@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace Wex;
 
-use \Wex\App\Response;
 use \Zend\Config\Reader\Ini;
 use \Zend\Config\Config;
 use \Zend\Db\Adapter\Adapter;
 use \Zend\Db\Sql\Sql;
 use \Wex\ActiveRecord;
+use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\ServerRequestFactory;
 
 class App
 {
@@ -22,17 +24,16 @@ class App
         throw new \RuntimeException('This is a singleton.');
     }
 
-    public static function bootstrap(callable $callback) : Response
+    public static function bootstrap() : App
     {
-        return $callback( new static );
+        return new static;
     }
 
     private function __construct()
     {
         $this->debug();
-
         $this->configure();
-        $this->route();
+
         Session::initialize( static::$config->app->key );
     }
 
@@ -61,16 +62,35 @@ class App
         return new Config($reader->fromFile($filename));
     }
 
-    private function route() : void
+    private function route(ServerRequest $request) : void
     {
-        static::$uri = $_GET['_url'] ?? '';
+        static::$uri = $request->getUri();;
     }
 
-    public function run() : Response
+    public function run(callable $callback) : void
     {
-        echo '<pre>';
-        print_r( static::$config );
-        return new Response\Html;
+        $request = ServerRequestFactory::fromGlobals(
+            $_SERVER,
+            $_GET,
+            $_POST,
+            $_COOKIE,
+            $_FILES
+        );
+
+        $this->route($request);
+
+        /**
+         * @todo Create Middleware
+         */
+        $response = new Response;
+        $response->getBody()->write(get_class( $this ));
+
+        $callback($this, $request, $response);
+    }
+
+    public function serve(Response $response)
+    {
+        echo $response->getBody();
     }
 
 }

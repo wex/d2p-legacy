@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace Wex;
 
-use \Zend\Config\Reader\Ini;
-use \Zend\Config\Config;
-use \Zend\Db\Adapter\Adapter;
-use \Zend\Db\Sql\Sql;
-use \Wex\ActiveRecord;
+use Zend\Config\Reader\Ini;
+use Zend\Config\Config;
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\Sql\Sql;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
+use Aura\Router\RouterContainer;
+use Aura\Router\Route;
+use Wex\ActiveRecord;
+use Wex\App\NoRouteException;
 
 class App
 {
@@ -18,6 +21,7 @@ class App
     static  $uri;
     static  $db;
     static  $sql;
+    static  $router;
 
     public function __clone()
     {
@@ -33,6 +37,7 @@ class App
     {
         $this->debug();
         $this->configure();
+        (require __ROOT__ . '/app/routes.php')(static::$router->getMap());        
 
         Session::initialize( static::$config->app->key );
     }
@@ -52,6 +57,8 @@ class App
         static::$db     = new Adapter( static::$config->database->toArray() );
         static::$sql    = new Sql(static::$db);
 
+        static::$router = new RouterContainer;
+
         ActiveRecord::setAdapter(static::$db);
         ActiveRecord::setSql(static::$sql);
     }
@@ -62,9 +69,17 @@ class App
         return new Config($reader->fromFile($filename));
     }
 
-    private function route(ServerRequest $request) : void
+    private function route(ServerRequest $request) : Route
     {
-        static::$uri = $request->getUri();;
+        static::$uri = $request->getUri();
+        
+        $matcher = static::$router->getMatcher();
+
+        $route = $matcher->match($request);
+
+        if (!$route) throw new NoRouteException("Route not found", 404);
+
+        return $route;
     }
 
     public function run(callable $callback) : void
@@ -77,19 +92,38 @@ class App
             $_FILES
         );
 
-        $this->route($request);
-
-        /**
-         * @todo Create Middleware
-         */
         $response = new Response;
-        $response->getBody()->write(get_class( $this ));
 
-        $callback($this, $request, $response);
+        try {
+
+            $route = $this->route($request);
+            if (is_callable($route->handler)) {
+                throw new \InvalidArgumentException("Routing with Closures is not implemented.");
+            } else {
+                var_dump( $route->handler );
+            }
+
+        } catch (NoRouteException $e) {
+
+            $response = $response->withStatus($e->getCode());
+
+        } catch (\Exception $e) {
+
+            $response = $response->withStatus(500);
+
+        }
+
+        $callback->call($this, $request, $response);
     }
 
     public function serve(Response $response)
     {
+        header(sprintf("HTTP/%s %d %s", 
+            $response->getProtocolVersion(),
+            $response->getStatusCode(),
+            $response->getReasonPhrase()
+        ));
+
         echo $response->getBody();
     }
 

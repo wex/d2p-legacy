@@ -1,10 +1,9 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "550263e023de703e2efef04489afd194",
     "content-hash": "0e203b6b1c2a8675fdeedf042da51e20",
     "packages": [
         {
@@ -54,7 +53,7 @@
                 "router",
                 "routing"
             ],
-            "time": "2017-03-02 16:34:47"
+            "time": "2017-03-02T16:34:47+00:00"
         },
         {
             "name": "filp/whoops",
@@ -115,7 +114,7 @@
                 "throwable",
                 "whoops"
             ],
-            "time": "2018-10-23 09:00:00"
+            "time": "2018-10-23T09:00:00+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -160,7 +159,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2018-07-02 15:55:56"
+            "time": "2018-07-02T15:55:56+00:00"
         },
         {
             "name": "psr/container",
@@ -209,7 +208,7 @@
                 "container-interop",
                 "psr"
             ],
-            "time": "2017-02-14 16:28:37"
+            "time": "2017-02-14T16:28:37+00:00"
         },
         {
             "name": "psr/http-factory",
@@ -261,7 +260,7 @@
                 "request",
                 "response"
             ],
-            "time": "2018-07-30 21:54:04"
+            "time": "2018-07-30T21:54:04+00:00"
         },
         {
             "name": "psr/http-message",
@@ -311,7 +310,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "psr/log",
@@ -358,7 +357,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10 12:19:37"
+            "time": "2016-10-10T12:19:37+00:00"
         },
         {
             "name": "ramsey/uuid",
@@ -440,7 +439,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2018-07-19 23:38:55"
+            "time": "2018-07-19T23:38:55+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -498,7 +497,7 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2018-08-06 14:22:27"
+            "time": "2018-08-06T14:22:27+00:00"
         },
         {
             "name": "zendframework/zend-config",
@@ -558,7 +557,7 @@
                 "config",
                 "zf"
             ],
-            "time": "2018-04-24 19:26:44"
+            "time": "2018-04-24T19:26:44+00:00"
         },
         {
             "name": "zendframework/zend-db",
@@ -616,7 +615,7 @@
                 "db",
                 "zf"
             ],
-            "time": "2018-04-09 13:21:36"
+            "time": "2018-04-09T13:21:36+00:00"
         },
         {
             "name": "zendframework/zend-diactoros",
@@ -682,7 +681,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2018-09-27 19:49:04"
+            "time": "2018-09-27T19:49:04+00:00"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -728,7 +727,7 @@
                 "stdlib",
                 "zf"
             ],
-            "time": "2018-08-28 21:34:05"
+            "time": "2018-08-28T21:34:05+00:00"
         }
     ],
     "packages-dev": [],

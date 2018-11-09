@@ -22,6 +22,8 @@ class App
     static  $db;
     static  $sql;
     static  $router;
+    static  $controller;
+    static  $action;
 
     public function __clone()
     {
@@ -37,7 +39,9 @@ class App
     {
         $this->debug();
         $this->configure();
-        (require __ROOT__ . '/app/routes.php')(static::$router->getMap());        
+        (require __ROOT__ . '/app/routes.php')(static::$router->getMap());
+
+        static::$router->getMap()->route('wildcard', '/')->wildcard('parameters');
 
         Session::initialize( static::$config->app->key );
     }
@@ -71,8 +75,6 @@ class App
 
     private function route(ServerRequest $request) : Route
     {
-        static::$uri = $request->getUri();
-        
         $matcher = static::$router->getMatcher();
 
         $route = $matcher->match($request);
@@ -82,7 +84,7 @@ class App
         return $route;
     }
 
-    public function run(callable $callback) : void
+    protected function getRequest() : ServerRequest
     {
         $request = ServerRequestFactory::fromGlobals(
             $_SERVER,
@@ -92,6 +94,15 @@ class App
             $_FILES
         );
 
+        static::$uri = $request->getUri()->withPath('/' . $_REQUEST['_url'] );
+        
+        return $request->withUri(static::$uri);
+    }
+
+    public function run(callable $callback) : void
+    {
+        $request = $this->getRequest();
+
         $response = new Response;
 
         try {
@@ -100,7 +111,15 @@ class App
             if (is_callable($route->handler)) {
                 throw new \InvalidArgumentException("Routing with Closures is not implemented.");
             } else {
-                var_dump( $route->handler );
+                
+                Controller::route($route);
+
+                echo '<pre>';
+                var_dump( Controller::getClass( $route->attributes['parameters'] ) );
+                var_dump( Controller::getMethod( $route->attributes['parameters'] ) );
+                print_r( $route );
+                print_r( $_REQUEST );
+                exit;
             }
 
         } catch (NoRouteException $e) {

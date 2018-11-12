@@ -112,13 +112,10 @@ class App
                 throw new \InvalidArgumentException("Routing with Closures is not implemented.");
             } else {
                 
-                Controller::route($route);
+                $callback = Controller::route($route);
 
                 echo '<pre>';
-                var_dump( Controller::getClass( $route->attributes['parameters'] ) );
-                var_dump( Controller::getMethod( $route->attributes['parameters'] ) );
-                print_r( $route );
-                print_r( $_REQUEST );
+                var_dump( $callback($route->attributes) );
                 exit;
             }
 

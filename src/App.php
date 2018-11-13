@@ -24,6 +24,7 @@ class App
     static  $router;
     static  $controller;
     static  $action;
+    static  $debug      = false;
 
     public function __clone()
     {
@@ -51,6 +52,7 @@ class App
         $whoops = new \Whoops\Run;
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
         $whoops->register();
+        static::$debug = true;
     }
 
     private function configure() : void
@@ -102,7 +104,6 @@ class App
     public function run(callable $callback) : void
     {
         $request = $this->getRequest();
-
         $response = new Response;
 
         try {
@@ -111,12 +112,9 @@ class App
             if (is_callable($route->handler)) {
                 throw new \InvalidArgumentException("Routing with Closures is not implemented.");
             } else {
-                
-                $callback = Controller::route($route);
-
-                echo '<pre>';
-                var_dump( $callback($route->attributes) );
-                exit;
+                $controller = Controller::route($route);
+                $response = $controller->call($route->attributes);
+                $response = $response->render($controller);
             }
 
         } catch (NoRouteException $e) {
@@ -125,6 +123,7 @@ class App
 
         } catch (\Exception $e) {
 
+            if (static::$debug) throw $e;
             $response = $response->withStatus(500);
 
         }

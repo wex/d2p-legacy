@@ -8,8 +8,10 @@ use Wex\Controller\Response;
 
 abstract class Controller
 {
-    static  $layout     = 'default';
-    const   formatter   = 'twig';
+    static      $layout     = 'default';
+    const       formatter   = 'php';
+
+    protected   $_data      = [];
 
     public static function getClass(array $parameters) : string
     {
@@ -57,7 +59,7 @@ abstract class Controller
         @include_once $controllerFile;
     }
 
-    public static function route(Route $route) : callable
+    public static function route(Route $route) : Controller
     {
         if ($route->handler === 'wildcard') {
             $controllerClass    = static::getClass($route->attributes['parameters']);
@@ -68,32 +70,44 @@ abstract class Controller
 
         static::autoload($controllerClass);
 
-        return function(array $parameters = []) use ($controllerClass, $controllerMethod) {
-            App::$controller    = new $controllerClass;
-            App::$action        = $controllerMethod;
+        App::$controller    = new $controllerClass;
+        App::$action        = $controllerMethod;
 
-            return call_user_func([App::$controller, 'call'], App::$action, $parameters);
-        };
-
-        return new $controllerClass;
+        return App::$controller;
     }
 
-    public function call($methodName, array $parameters = [])
+    public function call(array $parameters = [], $methodName = null)
     {
+        $methodName = $methodName ?? App::$action;
+
         $result = call_user_func_array([$this, $methodName], $parameters);
-        echo '<pre>';
-        printf("Called: %s\n", $methodName);
-        printf("Parameters: %s\n", print_r($parameters, true));
-        printf("Got: ");
-        var_dump( $result );
-        echo "\n\n";
-        printf("This should return thru formatter: %s\n", static::formatter);
+
+        $data   = $this->getData();
+
+        if (is_array($result)) {
+            $data = array_merge($data, $result);
+        } else if ($result === false) {
+            throw new \Exception("Denied");
+        }
+        
         $response = Response::factoryResponse(static::formatter);
-        $tmp = $response->run( static::getViewPath(get_class($this)), static::getViewName($methodName) );
-        var_dump( $response ); exit;
-        $tmp = $response->run( static::getViewPath(get_class($this)), static::getViewName($methodName) );
-        var_dump( $tmp );
-        var_dump($response);
-        exit;
+        $response->setData($data);
+
+        return $response->run( static::getViewPath(get_class($this)), static::getViewName($methodName), static::$layout );
+    }
+
+    public function getData()
+    {
+        return $this->_data;
+    }
+
+    public function __set($name, $value)
+    {
+        $this->_data[$name] = $value;
+    }
+
+    public function __get($name)
+    {
+        return $this->_data[$name] ?? null;
     }
 }

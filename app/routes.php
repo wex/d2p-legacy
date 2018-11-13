@@ -3,7 +3,7 @@
 return function(\Aura\Router\Map $router) {
     
 
-    $router->get('foo', '/foo/{bar}', 'FooController@index');
+    $router->get('foo', '/asdf/{bar}', 'FooController@index');
 
     $router->get('test', '/test', function($request, $response) {
 

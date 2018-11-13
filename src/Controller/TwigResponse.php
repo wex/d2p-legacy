@@ -15,13 +15,26 @@ class TwigResponse extends Response
             static::$loader = new \Twig_Loader_Filesystem(__ROOT__ . '/app/views');
             static::$twig   = new \Twig_Environment(static::$loader, [
                 'cache'     => __ROOT__ . '/storage/cache/views',
+                'debug'     => true,
+                'optimizations' => 0,
             ]);
         }
     }
 
-    public function run(string $viewPath, string $viewFile) : Response
+    public function run(string $viewPath, string $viewFile, string $layout = null) : Response
     {
-        $this->template = static::$twig->load("{$viewPath}/{$viewFile}.twig");
+        try {
+            $this->template = static::$twig->load("{$viewPath}/{$viewFile}.twig");
+        } catch (\Twig_Error $e) {
+            throw new \Exception($e->getMessage());
+        }
+
+        return $this;
+    }
+
+    public function render()
+    {
+        $this->getBody()->write( $this->template->render( $this->data ) );
 
         return $this;
     }

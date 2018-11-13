@@ -7,9 +7,11 @@ use Zend\Diactoros\Response as ZendResponse;
 
 abstract class Response extends ZendResponse
 {
-    public abstract function configure();
+    protected   $data   = [];
 
-    public abstract function run(string $viewPath, string $viewFile) : Response;
+    public abstract function configure();
+    public abstract function render();
+    public abstract function run(string $viewPath, string $viewFile, string $layout = null) : Response;
 
     public static function factoryResponse($format) : Response
     {
@@ -20,5 +22,10 @@ abstract class Response extends ZendResponse
         $instance->configure();
 
         return $instance;
+    }
+
+    public function setData(array $data = [])
+    {
+        $this->data = $data;
     }
 }

@@ -15,11 +15,13 @@ use Aura\Router\Route;
 use Wex\ActiveRecord;
 use Wex\App\NoRouteException;
 use Wex\Controller\ResponseFactory;
+use Zend\Diactoros\Uri;
 
 class App
 {
     static  $config;
     static  $uri;
+    static  $url;
     static  $db;
     static  $sql;
     static  $router;
@@ -87,6 +89,21 @@ class App
         return $route;
     }
 
+    protected function cleanUri(Uri $uri) : Uri
+    {
+        // Clean URI
+        $uri    = $uri->withPath('/' . $_REQUEST['_url'] ?? '');
+        $query  = $uri->getQuery();
+        $params = [];
+
+        parse_str($query, $params);
+        unset( $params['_url'] );
+
+        $uri    = $uri->withQuery( http_build_query($params) );
+
+        return $uri;
+    }
+
     protected function getRequest() : ServerRequest
     {
         $request = ServerRequestFactory::fromGlobals(
@@ -97,9 +114,10 @@ class App
             $_FILES
         );
 
-        static::$uri = $request->getUri()->withPath('/' . $_REQUEST['_url'] );
+        static::$url = $this->cleanUri($request->getUri());
+        static::$uri = static::$url->getPath() . '?' . static::$url->getQuery();
         
-        return $request->withUri(static::$uri);
+        return $request->withUri(static::$url);
     }
 
     public function run(callable $callback) : void

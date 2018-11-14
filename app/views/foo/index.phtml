@@ -2,11 +2,13 @@
 
 <pre>
 
-    <?php print_r( $this ); ?>
+    <kbd><?= $this->url; ?></kbd>
+    <kbd><?= $this->uri; ?></kbd>
 
-    <kbd><?= $var->id ?></kbd>
     <?php print_r( $var ); ?>
 
     <kbd><?= Wex\Base\User::logged() ? 'Logged' : 'Guest'; ?>
+
+    <a href="<?= $this->uriTo('foo', ['bar' => 'zzz']); ?>">Testilinkki</a>
 
 </pre>

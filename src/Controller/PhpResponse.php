@@ -13,12 +13,13 @@ class PhpResponse extends Response
         if (!file_exists($_template)) throw new \Exception("View {$_template} not found");
         if (!file_exists($_layout)) throw new \Exception("Layout {$_layout} not found");
 
-        $renderer = function($filename, $data) {
+        $renderer = function($___filename, $___data) {
             ob_start();
 
-            extract($data, EXTR_OVERWRITE);
+            extract($___data, EXTR_OVERWRITE);
+            unset( $___data );
 
-            require_once $filename;
+            require_once $___filename;
             $html = ob_get_contents();
 
             ob_end_clean();

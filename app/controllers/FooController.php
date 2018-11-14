@@ -4,7 +4,7 @@ class FooController extends \Wex\Controller
 {
     public function index($bar = null)
     {
-        $this->var = $bar;
+        $this->var = Wex\Page::load((int) $bar);
     }
 
     public function barAction()

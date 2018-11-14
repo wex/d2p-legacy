@@ -14,8 +14,7 @@
         "ramsey/uuid": "^3.8",
         "filp/whoops": "^2.3",
         "zendframework/zend-diactoros": "^2.0",
-        "aura/router": "^3.1",
-        "twig/twig": "^2.5"
+        "aura/router": "^3.1"
     },
     "autoload": {
         "psr-4": {

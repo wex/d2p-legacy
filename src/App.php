@@ -14,6 +14,7 @@ use Aura\Router\RouterContainer;
 use Aura\Router\Route;
 use Wex\ActiveRecord;
 use Wex\App\NoRouteException;
+use Wex\Controller\ResponseFactory;
 
 class App
 {
@@ -110,11 +111,24 @@ class App
 
             $route = $this->route($request);
             if (is_callable($route->handler)) {
+                
                 throw new \InvalidArgumentException("Routing with Closures is not implemented.");
+
             } else {
+
                 $controller = Controller::route($route);
-                $response = $controller->call($route->attributes);
-                $response = $response->render($controller);
+                $data       = $controller->call($route);
+                
+                $renderer   = ResponseFactory::getResponse($controller::renderer);
+
+                $response->getBody()->write(
+                    $renderer->render(
+                        Controller::getViewPath(get_class(App::$controller)),
+                        Controller::getViewName(App::$action),
+                        Controller::$layout,
+                        $data
+                    )
+                );
             }
 
         } catch (NoRouteException $e) {

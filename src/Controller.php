@@ -5,11 +5,12 @@ namespace Wex;
 
 use Aura\Router\Route;
 use Wex\Controller\Response;
+use Wex\Controller\ResponseFactory;
 
 abstract class Controller
 {
     static      $layout     = 'default';
-    const       formatter   = 'php';
+    const       renderer    = 'php';
 
     protected   $_data      = [];
 
@@ -71,16 +72,21 @@ abstract class Controller
         static::autoload($controllerClass);
 
         App::$controller    = new $controllerClass;
-        App::$action        = $controllerMethod;
 
         return App::$controller;
     }
 
-    public function call(array $parameters = [], $methodName = null)
+    public function call(Route $route)
     {
-        $methodName = $methodName ?? App::$action;
+        if ($route->handler === 'wildcard') {
+            $methodName   = static::getMethod($route->attributes['parameters']);
+        } else {
+            list(, $methodName) = explode('@', $route->handler);
+        }
 
-        $result = call_user_func_array([$this, $methodName], $parameters);
+        App::$action = $methodName;
+
+        $result = call_user_func_array([$this, $methodName], $route->attributes);
 
         $data   = $this->getData();
 
@@ -90,10 +96,7 @@ abstract class Controller
             throw new \Exception("Denied");
         }
         
-        $response = Response::factoryResponse(static::formatter);
-        $response->setData($data);
-
-        return $response->run( static::getViewPath(get_class($this)), static::getViewName($methodName), static::$layout );
+        return $data;
     }
 
     public function getData()

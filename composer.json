@@ -2,6 +2,7 @@
     "name": "wex/d2p",
     "description": "d2p Framework",
     "type": "project",
+    "license": "MIT",
     "authors": [
         {
             "name": "Niko Hujanen",

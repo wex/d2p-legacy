@@ -11,7 +11,7 @@ abstract class Minimizer
     public static function js(array $files, string $filename = 'app.js')
     {
         $isChanged  = App::$debug;
-        $sourcePath = __ROOT__ . '/media/js';
+        $sourcePath = __ROOT__ . '/app/media/js';
         $targetFile = __ROOT__ . "/public/js/{$filename}";
         $lastModify = file_exists($targetFile) ? filemtime($targetFile) : 0;
 
@@ -49,7 +49,7 @@ abstract class Minimizer
     public static function css(array $files, string $filename = 'app.css')
     {
         $isChanged  = App::$debug;
-        $sourcePath = __ROOT__ . '/media/scss';
+        $sourcePath = __ROOT__ . '/app/media/scss';
         $targetFile = __ROOT__ . "/public/css/{$filename}";
         $lastModify = file_exists($targetFile) ? filemtime($targetFile) : 0;
 

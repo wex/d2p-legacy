@@ -28,5 +28,8 @@
         "files": [
             "src/helpers.php"
         ]
+    },
+    "scripts": {
+        "clear": "rm -rf storage/cache/*; rm -rf public/css/*; rm -rf public/js/*"
     }
 }

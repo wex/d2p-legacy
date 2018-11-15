@@ -21,6 +21,9 @@
     "autoload": {
         "psr-4": {
             "Wex\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     }
 }

@@ -20,7 +20,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Wex\\": "src/"
+            "Wex\\": "src/",
+            "App\\": "app/src/"
         },
         "files": [
             "src/helpers.php"

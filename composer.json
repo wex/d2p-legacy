@@ -1,6 +1,7 @@
 {
     "name": "wex/d2p",
-    "description": "Dota 2 Platform",
+    "description": "d2p Framework",
+    "type": "project",
     "authors": [
         {
             "name": "Niko Hujanen",

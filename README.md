@@ -6,7 +6,7 @@ D2P is a lightweight PHP framework which can be used as Composer project to crea
 
   - You can use `git clone` to get it from GitHub
   - You can use Composer to install it as skeleton project: 
-    `composer create-project wex/d2p:dev-master --repository-url=https://wex.fi/d2p/`
+    `composer create-project wex/d2p:dev-master --repository-url=<tba>`
 
 # Requirements
 
@@ -23,13 +23,12 @@ D2P is requires PHP7.0 and is built over some other packages.
 
 # What's up - why to use?
 
-* Really lightweight callstack - built speed on mind.
 * Crypted sessions on database with custom session handling.
 * Powerful ORM implementation with query builder & schema generator.
 * Support for mixed CMS & MVC -mode.
 * SCSS made easy - no more precompiling.
 * Most straightforward View-Controller -implementation out there.
-* Major CSS blocks included (in SCSS ofc).
+* Major CSS styling included (in SCSS ofc).
 * Flexible routing.
 
 # How to help?

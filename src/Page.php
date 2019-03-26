@@ -42,12 +42,29 @@ class Page extends ActiveRecord implements Renderable, ActiveRecord\SoftDelete, 
     
     public function render()
     {
-        ob_start();
+        $renderer = function($__filename) {
+            ob_start();
 
-        require __ROOT__ . '/app/templates/' . $this->value . '.php';
+            require $__filename;
 
-        $html = ob_get_contents();
-        ob_end_clean();
+            $html = ob_get_contents();
+            ob_end_clean();
+
+            return $html;
+        };
+
+        $filename = __ROOT__ . "/app/templates/{$this->value}.php";
+
+        $oldPath = \get_include_path();
+        \set_include_path(implode(PATH_SEPARATOR, [
+            $oldPath,
+            __ROOT__ . '/app/views/include',
+            __ROOT__ . '/app/templates/include',
+        ]));
+
+        $html = $renderer($filename);
+
+        \set_include_path($oldPath);
 
         return $html;
     }

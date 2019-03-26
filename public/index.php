@@ -17,8 +17,7 @@ if (PHP_SAPI == 'cli-server') {
     }
 }
 
-define('__ROOT__', realpath(__DIR__ . '/../'));
-require __ROOT__ . '/vendor/autoload.php';
+require '../vendor/autoload.php';
 
 App::bootstrap()->run(function(ServerRequest $request, Response $response) {
     $this->serve( $response );

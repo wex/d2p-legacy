@@ -10,8 +10,8 @@ use \Wex\ActiveRecord\Select;
 use \Wex\ActiveRecord\Exception\NotFound;
 use \Wex\ActiveRecord\SoftDelete;
 use \Wex\ActiveRecord\Timestamps;
-use Wex\ActiveRecord\Blueprint\Column\HasMany;
-use Wex\ActiveRecord\Collection;
+use \Wex\ActiveRecord\Blueprint\Column\HasMany;
+use \Wex\ActiveRecord\Collection;
 
 abstract class ActiveRecord
 {

@@ -18,9 +18,7 @@
         "zendframework/zend-diactoros": "^2.0",
         "aura/router": "^3.1",
         "leafo/scssphp": "^0.7.7",
-        "matthiasmullie/minify": "^1.3",
-        "xpaw/steamid": "^1.0",
-        "vikas5914/steam-auth": "^1.0"
+        "matthiasmullie/minify": "^1.3"
     },
     "autoload": {
         "psr-4": {
@@ -28,12 +26,19 @@
             "App\\": "app/src/"
         },
         "files": [
-            "src/helpers.php"
+            "src/helpers.php",
+            "app/helpers.php"
         ]
     },
     "scripts": {
         "post-create-project-cmd": "Wex\\App\\Installer::createProject",
         "post-update-cmd": "Wex\\App\\Installer::postUpdate",
-        "clear": "rm -rf storage/cache/*; rm -rf public/css/*; rm -rf public/js/*"
+        "clear": "rm -rf storage/cache/*; rm -rf public/css/*; rm -rf public/js/*",
+        "setup": "Wex\\App\\Installer::installer",
+        "table": "Wex\\App\\Installer::createTable",
+        "test": "phpunit.bat"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
     }
 }

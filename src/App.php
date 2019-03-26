@@ -21,6 +21,8 @@ use Wex\Base\Renderable;
 
 class App
 {
+    const   VERSION     = '0.10';
+
     static  $config;
     static  $base;
     static  $uri;
@@ -30,6 +32,7 @@ class App
     static  $router;
     static  $controller;
     static  $action;
+    static  $cli        = false;
     static  $debug      = false;
 
     public function __clone()
@@ -39,22 +42,29 @@ class App
 
     public static function bootstrap() : App
     {
+        define('__ROOT__', realpath(__DIR__ . '/../'));
+
         return new static;
     }
 
     private function __construct()
     {
+        static::$cli = (php_sapi_name() === 'cli');
         $this->debug();
         $this->configure();
         (require __ROOT__ . '/app/routes.php')(static::$router->getMap());
 
         static::$router->getMap()->route('wildcard', '/')->wildcard('parameters');
 
-        Session::initialize( static::$config->app->key );
+        if (!static::$cli) {
+            Session::initialize( static::$config->app->key, preg_replace('/[^0-9]/', '_', static::VERSION) );
+        }
     }
 
     private function debug() : void
     {
+        if (static::$cli) return;
+
         $whoops = new \Whoops\Run;
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
         $whoops->register();
@@ -140,6 +150,7 @@ class App
 
                 $controller = Controller::route($route);
                 $data       = $controller->call($route);
+
                 if ($data instanceof Renderable) {
                     $response->getBody()->write(
                         $data->render()
@@ -198,9 +209,17 @@ class App
         echo $response->getBody();
     }
 
-    public static function command($name, $parameters)
+    public function cli($name, $parameters): callable
     {
-        throw new \Exception('Not implemented');
+        $commandClass   = Command::getClass($name);
+        Command::autoload($commandClass);
+
+        if (!class_exists($commandClass))
+            throw new \Exception("Unknown command: {$commandClass}");
+
+        $command = new $commandClass($parameters);
+
+        return $command;
     }
 
 }

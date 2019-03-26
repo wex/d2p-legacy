@@ -19,7 +19,7 @@ class PhpResponse extends Response
             extract($___data, EXTR_OVERWRITE);
             unset( $___data );
 
-            require_once $___filename;
+            include $___filename;
             $html = ob_get_contents();
 
             ob_end_clean();
@@ -27,8 +27,17 @@ class PhpResponse extends Response
             return $html;
         };
 
+        $oldPath = \get_include_path();
+        \set_include_path(implode(PATH_SEPARATOR, [
+            $oldPath,
+            __ROOT__ . '/app/views/include',
+            __ROOT__ . '/app/templates/include',
+        ]));
+
         $body = $renderer($_template, $data);
         $html = $renderer($_layout, ['__CONTENT' => $body]);
+
+        \set_include_path($oldPath);
 
         return $html;
     }

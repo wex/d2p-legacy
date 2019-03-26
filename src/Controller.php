@@ -104,6 +104,8 @@ abstract class Controller
             $data = array_merge($data, $result);
         } else if ($result === false) {
             throw new \Exception("Denied");
+        } else {
+            $data = $this->getData();
         }
         
         return $data ?? [];

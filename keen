@@ -2,6 +2,7 @@
 <?php
 
 use Wex\App;
+use Wex\Command;
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -9,7 +10,13 @@ ini_set('display_errors', 1);
 define('__ROOT__', realpath(__DIR__));
 require __ROOT__ . '/vendor/autoload.php';
 
-$command    = $_SERVER['argv'][1];
-$parameters = array_slice($_SERVER['argv'], 2);
+$command    = $_SERVER['argv'][1] ?? null;
+$parameters = array_slice($_SERVER['argv'] ?? [], 2);
 
-call_user_func('Wex\App::command', $command, $parameters);
+try {
+    $cli = App::bootstrap()->cli($command, $parameters);
+    $cli();
+} catch (\Exception $e) {
+    Command::error($e->getMessage());
+    exit(-1);
+}

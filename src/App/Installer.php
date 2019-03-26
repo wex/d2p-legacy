@@ -23,6 +23,11 @@ class Installer
             $iniWriter  = new IniWriter;
             $iniWriter->setRenderWithoutSectionsFlags(true);
             $iniWriter->toFile('.config', $config);
+            
+            echo "\n";
+            printf("Next you should check our project root for .config file.\n");
+            printf("Update your database credentials and after that run:\n\n");
+            printf("composer setup\n\n");
         }
 
         return 1;

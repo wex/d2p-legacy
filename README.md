@@ -21,11 +21,23 @@ D2P is requires PHP7.0 and is built over some other packages.
 * [leafo/scssphp] - Used for realtime SCSS compiling
 * [matthiasmullie/minify] - Used for realtime JS / CSS minifying
 
+# What's up - why to use?
+
+* Really lightweight callstack - built speed on mind.
+* Crypted sessions on database with custom session handling.
+* Powerful ORM implementation with query builder & schema generator.
+* Support for mixed CMS & MVC -mode.
+* SCSS made easy - no more precompiling.
+* Most straightforward View-Controller -implementation out there.
+* Major CSS blocks included (in SCSS ofc).
+* Flexible routing.
+
 # How to help?
 
 At this point D2P is a one-man show. Architecture WILL be changed and some parts will be rewritten for sure.
 
 # NOTICE!
+
 Please do not use D2P in production before version `1.0.0` is released!
 
 License

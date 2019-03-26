@@ -1,4 +1,4 @@
-# wex-d2p
+# D2P
 
 D2P is a lightweight PHP framework which can be used as Composer project to create your own software.
 

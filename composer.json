@@ -34,10 +34,7 @@
         ]
     },
     "scripts": {
-        "post-create-project-cmd": [
-            "Wex\\App\\Installer::createProject",
-            "chmod +x keen"
-        ],
+        "post-create-project-cmd": "Wex\\App\\Installer::createProject",
         "post-update-cmd": "Wex\\App\\Installer::postUpdate",
         "clear": "rm -rf storage/cache/*; rm -rf public/css/*; rm -rf public/js/*",
         "setup": "Wex\\App\\Installer::installer",

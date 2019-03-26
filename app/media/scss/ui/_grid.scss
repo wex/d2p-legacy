@@ -1,0 +1,13 @@
+.row {
+    @include grid();
+
+    &.centered {
+        & > * {
+            align-self: center;
+        }
+    }
+}
+
+.container {
+    padding: $grid-gutter 0;
+}

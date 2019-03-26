@@ -1,0 +1,51 @@
+.nav {
+    display: block;
+    position: relative;
+    padding: 0 50px;
+
+    .item {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+        vertical-align: middle;
+
+        &.header {
+            @include font-size(30);
+            color: $default-bg;
+            text-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
+            font-family: $font;
+            font-weight: $bold;
+        }
+
+        a {
+            display: inline-block;
+            height: 42px;
+            line-height: 42px;
+            margin: 0;
+            padding: 0 20px;
+            color: inherit;
+        }
+    }
+
+    .items {
+        display: inline-block;
+
+        &.aligned {
+            &.right {
+                float: right;
+            }
+        }
+    }
+
+    .item.dropdown {
+        .nav {
+            display: none;
+        }
+
+        &:hover {
+            .nav {
+                display: block;
+            }
+        }
+    }
+}

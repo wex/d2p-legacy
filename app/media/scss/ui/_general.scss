@@ -1,0 +1,6 @@
+body {
+    background: $default-bg;
+    color: $default-fg;
+    @include font();
+    @include font-size(14);
+}

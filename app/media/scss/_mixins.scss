@@ -1,0 +1,80 @@
+// Calculates em so it could be used everywhere.
+//
+// @param integer (font) size in pixel
+// @param integer reference font-size in pixel
+// @return string em
+@function em($px: $line-height-px, $font-size: $font-size-body-px) {
+  @return $px / $font-size * 1em;
+}
+  
+// Calculates rem so it could be used everywhere.
+//
+// @param integer font size in pixel
+// @param integer reference size (for rem always font-size of body) in pixel
+// @return string rem
+@function rem($px: $line-height-px, $font-size: $font-size-body-px) {
+  @return $px / $font-size * 1rem;
+}
+  
+// Calculates percent so it could be used everywhere.
+//
+// @param integer size in pixel
+// @param integer reference size in pixel
+// @return string em
+@function pc($px: $line-height-px, $standard: $font-size-body-px) {
+  @return $px / $standard * 100%;
+}
+  
+// Creates the font size in %
+//
+// @param integer font size in px
+// @param integer font-size of parent element in px (if empty than it's the global font size)
+// @return string css font-size with calculated % value
+@mixin font-size($px, $standard: $font-size-body-px) {
+  font-size: pc($px,$standard);
+}
+  
+// Creates the line height in em
+//
+// @param integer font size in pixel
+// @param integer line-height in pixel
+// @return string line height
+@mixin line-height($line-height: $line-height-px, $font-size: $font-size-body-px) {
+  line-height: em($line-height, $font-size);
+}
+
+@mixin font($font-family: $font) {
+  font-family: $font;
+}
+
+@mixin grid($gap: $grid-gutter) {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: $gap;
+
+  .span-1 { grid-column: span 1; }
+  .span-2 { grid-column: span 2; }
+  .span-3 { grid-column: span 3; }
+  .span-4 { grid-column: span 4; }
+  .span-5 { grid-column: span 5; }
+  .span-6 { grid-column: span 6; }
+  .span-7 { grid-column: span 7; }
+  .span-8 { grid-column: span 8; }
+  .span-9 { grid-column: span 9; }
+  .span-10 { grid-column: span 10; }
+  .span-11 { grid-column: span 11; }
+  .span-12 { grid-column: span 12; }
+
+  .row-1 { grid-row: span 1; }
+  .row-2 { grid-row: span 2; }
+  .row-3 { grid-row: span 3; }
+  .row-4 { grid-row: span 4; }
+  .row-5 { grid-row: span 5; }
+  .row-6 { grid-row: span 6; }
+}
+
+@mixin autogrid($gap: $grid-gutter) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(1px, 1fr));
+  grid-gap: $gap;
+}

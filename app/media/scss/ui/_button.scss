@@ -1,0 +1,59 @@
+.button, {
+    display: inline-block;
+    border: none;
+    outline: none;
+    background: $default-bg;
+    border: 1px solid $default-fg;
+    color: $default-fg;
+    text-decoration: none;
+    padding: 0 2em;
+    margin: 0;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-align: center;
+    vertical-align: middle;
+
+    font-weight: $light;
+    @include font();
+    @include font-size(14);
+    @include line-height(40);
+
+    &.success {
+        background-color: $success-bg;
+        border-color: darken($success-bg, 10%);
+        color: $success-fg;
+    }
+    &.error {
+        background-color: $error-bg;
+        border-color: darken($error-bg, 10%);
+        color: $error-fg;
+    }
+    &.warning {
+        background-color: $warning-bg;
+        border-color: darken($warning-bg, 10%);
+        color: $warning-fg;
+    }
+    &.notice {
+        background-color: $notice-bg;
+        border-color: darken($notice-bg, 10%);
+        color: $notice-fg;
+    }
+    &.secondary {
+        background-color: $default-fg;
+        border-color: $default-fg;
+        color: $default-bg;
+    }
+    &.ghost {
+        background-color: $default-bg;
+        border-color: transparent;
+        color: $default-fg;
+        box-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
+    }
+}
+
+.buttonset {
+    @include autogrid();
+    .button {
+        padding: 0;
+    }
+}

@@ -1,12 +1,15 @@
 {
     "name": "wex/d2p",
-    "description": "d2p Framework",
+    "description": "d2p Framework for PHP7+",
     "type": "project",
+    "keywords": ["framework", "mvc", "orm"],
     "license": "MIT",
     "authors": [
         {
             "name": "Niko Hujanen",
-            "email": "niko.hujanen@gmail.com"
+            "email": "niko.hujanen@gmail.com",
+            "homepage": "https://wex.fi",
+            "role": "Developer"
         }
     ],
     "require": {

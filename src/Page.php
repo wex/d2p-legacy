@@ -5,10 +5,14 @@ namespace Wex;
 
 use Wex\ActiveRecord\Blueprint;
 use Wex\ActiveRecord\Exception\NotFound;
+use Wex\Base\Renderable;
+use Wex\Controller\Session;
 
-class Page extends ActiveRecord implements ActiveRecord\SoftDelete, ActiveRecord\Timestamps
+class Page extends ActiveRecord implements Renderable, ActiveRecord\SoftDelete, ActiveRecord\Timestamps
 {
     const   table   = 'pages';
+
+    protected   $session    = null;
 
     protected function describe(Blueprint &$blueprint) : void
     {
@@ -27,12 +31,43 @@ class Page extends ActiveRecord implements ActiveRecord\SoftDelete, ActiveRecord
         $this->hasMany(\Wex\Page\Html::class, 'users', 'page_id')->thru('pages2users', 'user_id');
     }
 
-    public static function get(string $uri)
+    public static function getByUri(string $uri)
     {
         try {
             return static::select()->where('uri = ?', $uri)->first();
         } catch (NotFound $e) {
             return false;
         }
+    }
+    
+    public function render()
+    {
+        ob_start();
+
+        require __ROOT__ . '/app/templates/' . $this->value . '.php';
+
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        return $html;
+    }
+    
+    public function session()
+    {
+        if (null === $this->session) {
+            $this->session = new Session;
+        }
+
+        return $this->session;
+    }
+
+    public function get($param)
+    {
+        return filter_input(INPUT_GET, $param);
+    }
+
+    public function post($param)
+    {
+        return filter_input(INPUT_POST, $param);
     }
 }

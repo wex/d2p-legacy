@@ -83,7 +83,7 @@ abstract class ActiveRecord
      * Magical setter for properties
      * Flags properties dirty
      */
-    public function __set(string $key, $value) : void
+    public function __set(string $key, $value)
     {
         if (!isset($this->__dirty[ $key ])) {
             $this->__dirty[ $key ] = $this->__data[ $key ] ?? null;
@@ -134,7 +134,7 @@ abstract class ActiveRecord
             if ($this->id > 0) {
 
                 foreach ($keys as $key) {
-                    if (!isset($this->__dirty[$key])) continue;
+                    if (!array_key_exists($key, $this->__dirty)) continue;
                     $data[$key] = $this->__data[$key] ?? null;
                 }
                 if (count($data)) $this->_update($data, $this->id);

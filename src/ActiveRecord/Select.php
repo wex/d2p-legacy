@@ -25,9 +25,19 @@ class Select extends RawSelect // \Countable
         return $this->_class::create( parent::first() );
     }
 
+    public function fetchFirst() 
+    {
+        return parent::first();
+    }
+
     public function all() : array
     {
         return array_map(function($v) { return $this->_class::create($v); }, parent::all());
+    }
+
+    public function fetchAll()
+    {
+        return parent::all();
     }
 
     public function current()

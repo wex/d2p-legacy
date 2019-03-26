@@ -14,12 +14,15 @@ use Aura\Router\RouterContainer;
 use Aura\Router\Route;
 use Wex\ActiveRecord;
 use Wex\App\NoRouteException;
+use Wex\App\RedirectException;
 use Wex\Controller\ResponseFactory;
 use Zend\Diactoros\Uri;
+use Wex\Base\Renderable;
 
 class App
 {
     static  $config;
+    static  $base;
     static  $uri;
     static  $url;
     static  $db;
@@ -114,8 +117,9 @@ class App
             $_FILES
         );
 
-        static::$url = $this->cleanUri($request->getUri());
-        static::$uri = static::$url->getPath() . '?' . static::$url->getQuery();
+        static::$url    = $this->cleanUri($request->getUri());
+        static::$base   = (string) $request->getUri()->withPath('')->withQuery('');
+        static::$uri    = static::$url->getPath() . '?' . static::$url->getQuery();
         
         return $request->withUri(static::$url);
     }
@@ -136,22 +140,38 @@ class App
 
                 $controller = Controller::route($route);
                 $data       = $controller->call($route);
-                
-                $renderer   = ResponseFactory::getResponse($controller::renderer);
+                if ($data instanceof Renderable) {
+                    $response->getBody()->write(
+                        $data->render()
+                    );
+                } else {
+                    $renderer   = ResponseFactory::getResponse($controller::renderer);
 
-                $response->getBody()->write(
-                    $renderer->render(
-                        Controller::getViewPath(get_class(App::$controller)),
-                        Controller::getViewName(App::$action),
-                        Controller::$layout,
-                        $data
-                    )
-                );
+                    $response->getBody()->write(
+                        $renderer->render(
+                            Controller::getViewPath(get_class(App::$controller)),
+                            Controller::getViewName(App::$action),
+                            Controller::$layout,
+                            $data
+                        )
+                    );
+                }
             }
 
+        } catch (RedirectException $e) {
+            
+            $response = $response->withStatus(301);
+            $response = $response->withHeader('Location', $e->getMessage());
+            
         } catch (NoRouteException $e) {
 
             $response = $response->withStatus($e->getCode());
+            $response->getBody()->write($e->getMessage());
+
+        } catch (HttpExceptionion $e) {
+
+            $response = $response->withStatus($e->getCode());
+            $response->getBody()->write($e->getMessage());
 
         } catch (\Exception $e) {
 
@@ -170,8 +190,17 @@ class App
             $response->getStatusCode(),
             $response->getReasonPhrase()
         ));
+        
+        foreach ($response->getHeaders() as $name => $value) {
+            header("{$name}: " . implode(', ', $value));
+        }
 
         echo $response->getBody();
+    }
+
+    public static function command($name, $parameters)
+    {
+        throw new \Exception('Not implemented');
     }
 
 }

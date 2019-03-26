@@ -70,7 +70,7 @@ trait Database
 
     public function refresh()
     {
-        $this->__data = static::select()->where(['id' => $this->id])->first();
+        $this->__data = static::select()->where(['id' => $this->id])->fetchFirst();
     }
 
     public static function now(string $format = 'Y-m-d H:i:s')

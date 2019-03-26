@@ -6,12 +6,18 @@ namespace Wex;
 use Aura\Router\Route;
 use Wex\Controller\Response;
 use Wex\Controller\ResponseFactory;
+use Wex\Base\Renderable;
+use Wex\Controller\Acl;
+use Wex\App\RedirectException;
+use Wex\Controller\Session;
 
 abstract class Controller
 {
+    static      $acl        = ['*' => '*'];
     static      $layout     = 'default';
     const       renderer    = 'php';
 
+    protected   $session    = null;
     protected   $_data      = [];
 
     public static function getClass(array $parameters) : string
@@ -85,18 +91,22 @@ abstract class Controller
         }
 
         App::$action = $methodName;
-
+        
+        if (!$this->isAllowed($methodName))
+            throw new \Exception("ACL Deny");
+        
         $result = call_user_func_array([$this, $methodName], $route->attributes);
 
-        $data   = $this->getData();
-
-        if (is_array($result)) {
+        if (is_object($result)) {
+            return $result;
+        } else if (is_array($result)) {
+            $data = $this->getData();
             $data = array_merge($data, $result);
         } else if ($result === false) {
             throw new \Exception("Denied");
         }
         
-        return $data;
+        return $data ?? [];
     }
 
     public function getData()
@@ -112,5 +122,62 @@ abstract class Controller
     public function __get($name)
     {
         return $this->_data[$name] ?? null;
+    }
+
+    public function session()
+    {
+        if (null === $this->session) {
+            $this->session = new Session;
+        }
+
+        return $this->session;
+    }
+
+    public function get($param)
+    {
+        return filter_input(INPUT_GET, $param);
+    }
+
+    public function post($param)
+    {
+        return filter_input(INPUT_POST, $param);
+    }
+    
+    public function uriTo($target) 
+    {
+        $generator = \Wex\App::$router->getGenerator();
+        $target = $generator->generate($target);
+        
+        return \Wex\App::$base . $target;
+    }
+    
+    public function redirect($target = '/', $params = [])
+    {
+        if (strpos($target, '://') !== false) {
+            $url = $target;
+        } else if (strlen($target) && $target[0] !== '/') {
+            $generator = \Wex\App::$router->getGenerator();
+            $target = $generator->generate($target, $params);
+            $url = \Wex\App::$base . $target;
+        } else {
+            $url = \Wex\App::$base . $target;
+        }
+        
+        throw new RedirectException($url);
+    }
+    
+    public function isAllowed($method)
+    {
+        return true;
+    }
+    
+    public function isLogged()
+    {
+        return \App\User::logged();
+    }
+    
+    public function user()
+    {
+        return \App\User::current();
     }
 }

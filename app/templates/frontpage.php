@@ -1,6 +1,5 @@
 <?php require_once 'header.inc.php'; ?>
 
-<main>
     <h1>Project created successfully</h1>
 
 
@@ -77,8 +76,6 @@
             </div>
         </div>
     </form>
-
-</main>
 
 
 <?php require_once 'footer.inc.php'; ?>
